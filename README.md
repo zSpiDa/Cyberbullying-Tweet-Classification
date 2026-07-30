@@ -1,6 +1,6 @@
 # 🛡️ Cyberbullying Tweet Classification
-**Progetto per il corso di Sistemi Intelligenti (2026)**  
-*Autori: Spinelli & Albano*
+**Progetto per il corso di Sistemi Intelligenti UniBa(2026)**  
+*Autori: Daniele Spinelli & Simone Albano*
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
 ![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.4+-orange?logo=scikit-learn&logoColor=white)
@@ -41,3 +41,6 @@ Analizzando la **Feature Importance (Gini Decrease)**, abbiamo verificato che il
 * `Tesi_SI_SpinelliAlbano_CyberbullyingTweets.ipynb`: Notebook Jupyter contenente l'intera pipeline commentata, dall'EDA alla Feature Importance.
 * `tesi_si_spinellialbano_cyberbullyingtweets.py`: Script Python del progetto.
 * `Tesina Cyberbullying Tweets Spinelli Albano Sistemi Intelligenti 2026.pdf`: Report finale e presentazione del progetto.
+
+## 📄 Dataset
+* https://www.kaggle.com/datasets/andrewmvd/cyberbullying-classification
