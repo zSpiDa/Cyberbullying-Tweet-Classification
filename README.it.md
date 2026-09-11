@@ -40,9 +40,9 @@ Analizzando la **Feature Importance (Gini Decrease)**, abbiamo verificato che il
 * Le top 20 parole estratte dall'algoritmo si mappano perfettamente sulle categorie sociologiche del dataset (etnia, orientamento sessuale, religione).
 
 ## 📂 Struttura della Repository
-* `Tesi_SI_SpinelliAlbano_CyberbullyingTweets.ipynb`: Notebook Jupyter contenente l'intera pipeline commentata, dall'EDA alla Feature Importance.
-* `tesi_si_spinellialbano_cyberbullyingtweets.py`: Script Python del progetto.
-* `Tesina Cyberbullying Tweets Spinelli Albano Sistemi Intelligenti 2026.pdf`: Report finale e presentazione del progetto.
+* `cyberbullying_classification.ipynb`: Notebook Jupyter contenente l'intera pipeline commentata, dall'EDA alla Feature Importance.
+* `cyberbullying_classification.py`: Script Python del progetto.
+* `report.pdf`: Report finale e presentazione del progetto.
 
 ## 📄 Dataset
 * https://www.kaggle.com/datasets/andrewmvd/cyberbullying-classification
