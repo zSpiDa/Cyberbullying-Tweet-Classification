@@ -2,6 +2,8 @@
 **Progetto per il corso di Sistemi Intelligenti UniBa(2026)**  
 *Autori: Daniele Spinelli & Simone Albano*
 
+[EN English Version](README.md)
+
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
 ![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.4+-orange?logo=scikit-learn&logoColor=white)
 ![NLP](https://img.shields.io/badge/NLP-TF--IDF-green)
