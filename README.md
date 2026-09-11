@@ -1,94 +1,184 @@
 # 🛡️ Cyberbullying Tweet Classification
 
-**Machine Learning & NLP project developed for the Intelligent Systems course at the University of Bari (2026)**  
-*Authors: Daniele Spinelli & Simone Albano*
+**Machine Learning & NLP project developed for the Intelligent Systems course at the University of Bari (2026)**
 
-[IT Versione italiana](README.it.md)
+**Authors:** Daniele Spinelli & Simone Albano
 
-![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
-![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.4+-orange?logo=scikit-learn&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3.x-blue?logo=python&logoColor=white)
+![Scikit-Learn](https://img.shields.io/badge/scikit--learn-ML-orange?logo=scikit-learn&logoColor=white)
 ![NLP](https://img.shields.io/badge/NLP-TF--IDF-green)
 ![Machine Learning](https://img.shields.io/badge/Machine%20Learning-Random%20Forest-red)
 
-## 📌 Project Overview
+## Project Overview
 
-This Natural Language Processing (NLP) project focuses on the **multiclass classification of tweets according to different types of cyberbullying**.
+This project investigates multiclass cyberbullying classification on Twitter data using Natural Language Processing and traditional Machine Learning techniques.
 
-The goal is not only to train a predictive model, but also to investigate patterns in online abusive language and understand how textual context, feature extraction and data cleaning affect classification performance.
+The workflow combines exploratory text analysis, TF-IDF feature extraction, resampling, model comparison and interpretability. The goal is to distinguish between six cyberbullying categories and evaluate how different classifiers behave on sparse textual features.
 
-The project covers the complete Machine Learning workflow, from **Exploratory Data Analysis (EDA)** and text preprocessing to model training and feature importance analysis.
+## Dataset & Exploratory Data Analysis
 
-## 📊 Dataset & Exploratory Data Analysis
+The project uses the public **Cyberbullying Classification** dataset by `andrewmvd` on Kaggle.
 
-The project uses a multiclass dataset containing tweets labelled according to different categories of cyberbullying.
+The executed dataset contains **47,692 tweets** across six relatively balanced classes:
 
-During the exploratory analysis, category-specific **WordClouds** were generated to investigate recurring terms and semantic differences between classes.
+- age
+- ethnicity
+- gender
+- not_cyberbullying
+- other_cyberbullying
+- religion
 
-The analysis highlighted some relevant characteristics of the dataset:
+Exploratory analysis includes class-specific WordClouds and an NMF-based topic analysis. The EDA highlights clearer lexical patterns in some categories, while broader classes such as `other_cyberbullying` contain more heterogeneous language.
 
-- Categories such as `Religion` and `Age` contain relatively distinctive groups of words.
-- `Other_Cyberbullying` and `Not_Cyberbullying` show a higher degree of overlap and noise.
-- Some tweets appear to be incorrectly labelled in the original dataset or associated with recurring topics unrelated to explicit cyberbullying, such as the Australian reality show *MKR*.
+## Machine Learning Pipeline
 
-These observations influenced the preprocessing and resampling strategy adopted in the following stages.
+### 1. Train/Test Split
 
-## ⚙️ Machine Learning Pipeline
+The dataset is split into training and test sets using an 80/20 stratified split with a fixed random state.
 
-The classification workflow consists of three main stages.
+### 2. TF-IDF Feature Extraction
 
-### 1. Text Preprocessing & Feature Extraction
+Tweets are represented using `TfidfVectorizer` with:
 
-Tweets are transformed into numerical representations using `TfidfVectorizer`.
+- unigrams and bigrams;
+- a maximum of 10,000 features;
+- custom English stopwords;
+- `max_df=0.95`;
+- `min_df=2`.
 
-The preprocessing pipeline includes:
+The vectorizer is fitted **only on the training data** and then applied to the test set.
 
-- Custom stopword filtering and removal of elements such as tags, URLs and `"RT"`.
-- **Unigrams and bigrams (`ngram_range=(1,2)`)** to capture contextual information such as `"high school"`.
-- Feature space limited to the **10,000 most relevant features**.
+### 3. SMOTETomek
 
-### 2. Data Cleaning with SMOTETomek
+SMOTETomek is used as a combined resampling and boundary-cleaning step before training KNN and Random Forest models.
 
-`SMOTETomek` is applied to improve the quality of the training data.
+Because the original dataset is already relatively balanced, this step should not be interpreted simply as class balancing. SMOTETomek combines synthetic oversampling with Tomek Links cleaning, so the net change in sample count does not correspond directly to a number of removed observations.
 
-Since the original dataset is already relatively balanced, the main purpose of this step is not simply class balancing. In particular, the **Tomek Links** component helps remove ambiguous samples located near decision boundaries between overlapping classes.
+### 4. Classification Models
 
-This is especially relevant for categories where the exploratory analysis revealed substantial semantic overlap.
+The evaluated models are:
 
-### 3. Classification Models
+- K-Nearest Neighbors with Euclidean distance;
+- K-Nearest Neighbors with cosine distance;
+- Decision Tree;
+- Random Forest with 5 trees;
+- Random Forest with 200 trees.
 
-Two Machine Learning algorithms are evaluated:
+Decision Tree `max_depth` is selected with `GridSearchCV` using 5-fold cross-validation and Macro F1 on the training data. The search selected:
 
-- **K-Nearest Neighbors (KNN)** using cosine distance.
-- **Random Forest Classifier**, used as the main classification model.
+```text
+max_depth = None
+CV Macro F1 = 0.8013
+```
 
-## 🚀 Results & Interpretability
+The test set is kept separate from this hyperparameter-selection step and is used for final evaluation.
 
-The **Random Forest Classifier** showed the strongest overall performance among the evaluated approaches.
+## Results
 
-To better understand the model's predictions, **feature importance based on Gini importance** was analyzed.
+| Model | Accuracy | Macro Precision | Macro Recall | Macro F1 |
+| --- | ---: | ---: | ---: | ---: |
+| KNN — Euclidean | 0.3659 | 0.6617 | 0.3669 | 0.3775 |
+| KNN — Cosine | 0.6960 | 0.7287 | 0.6953 | 0.7083 |
+| Decision Tree — Tuned | 0.8032 | 0.8030 | 0.8022 | 0.8026 |
+| Random Forest — 5 Trees | 0.8182 | 0.8162 | 0.8173 | 0.8163 |
+| **Random Forest — 200 Trees** | **0.8334** | **0.8334** | **0.8327** | **0.8317** |
 
-The analysis revealed meaningful patterns in the features learned by the model:
+The **Random Forest with 200 trees** achieved the strongest overall performance among the evaluated approaches, reaching approximately **83.3% accuracy** and **0.832 Macro F1**.
 
-- Contextual information captured through bigrams contributes to classification. For example, `"high school"` appears among the most discriminative features.
-- Several of the most important textual features are strongly associated with the dataset's cyberbullying categories, including ethnicity, sexual orientation and religion.
+The notebook also includes confusion matrices and class-level precision, recall and F1-score visualizations for a more detailed comparison.
 
-This analysis provides an interpretable view of the textual patterns used by the classifier rather than relying exclusively on predictive performance.
+## Interpretability
 
-## 📂 Repository Structure
+Random Forest Gini feature importance is used to inspect influential TF-IDF features. Both individual terms and bigrams contribute to the model, providing a simple view of the textual patterns associated with the classification task.
 
-- `cyberbullying_classification.ipynb` — Jupyter Notebook containing the complete workflow, from EDA to feature importance analysis.
-- `cyberbullying_classification.py` — Python script containing the project implementation.
-- `report.pdf` — Final academic report and project presentation.
+## Repository Structure
 
-## 📄 Dataset
+```text
+Cyberbullying-Tweet-Classification/
+├── cyberbullying_classification.ipynb
+├── requirements.txt
+├── README.md
+├── .gitignore
+└── data/
+    └── .gitkeep
+```
 
-The dataset used in this project is publicly available on Kaggle:
+The dataset itself is intentionally excluded from Git.
 
-**Cyberbullying Classification Dataset — Andrew MVD**  
-https://www.kaggle.com/datasets/andrewmvd/cyberbullying-classification
+## Installation
 
-## 🎓 Academic Context
+Clone the repository:
 
-Developed as a university project for the **Intelligent Systems** course at the **University of Bari**, 2026.
+```bash
+git clone https://github.com/zSpiDa/Cyberbullying-Tweet-Classification.git
+cd Cyberbullying-Tweet-Classification
+```
 
-**Authors:** Daniele Spinelli & Simone Albano
+Create and activate a virtual environment.
+
+**Windows**
+
+```bash
+python -m venv .venv
+.venv\Scripts\activate
+```
+
+**macOS / Linux**
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+```
+
+Install the dependencies:
+
+```bash
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
+
+Then open:
+
+```bash
+jupyter notebook cyberbullying_classification.ipynb
+```
+
+The notebook can also be opened directly in **VS Code** with the Jupyter extension.
+
+## Dataset Loading
+
+The notebook is portable across local Jupyter environments, VS Code and Google Colab.
+
+It tries to obtain `cyberbullying_tweets.csv` in this order:
+
+1. local file at `data/cyberbullying_tweets.csv`;
+2. automatic download of `andrewmvd/cyberbullying-classification` through `kagglehub`;
+3. manual file upload when running in Google Colab, if the previous methods are unavailable.
+
+No personal Google Drive path is required.
+
+## Google Colab
+
+Open `cyberbullying_classification.ipynb` in Colab and run the notebook from top to bottom.
+
+If the runtime does not already contain the required additional packages, install them with:
+
+```python
+%pip install imbalanced-learn wordcloud kagglehub
+```
+
+Then use **Runtime → Run all**.
+
+## Reproducibility
+
+The project uses:
+
+```python
+RANDOM_STATE = 67
+```
+
+The final repository includes the executed notebook with its evaluation outputs so that the reported results can be inspected directly.
+
+## Academic Context
+
+Developed for the **Intelligent Systems** course at the **University of Bari** in 2026.
