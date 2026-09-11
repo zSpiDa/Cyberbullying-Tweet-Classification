@@ -76,9 +76,9 @@ This analysis provides an interpretable view of the textual patterns used by the
 
 ## 📂 Repository Structure
 
-- `Tesi_SI_SpinelliAlbano_CyberbullyingTweets.ipynb` — Jupyter Notebook containing the complete workflow, from EDA to feature importance analysis.
-- `tesi_si_spinellialbano_cyberbullyingtweets.py` — Python script containing the project implementation.
-- `Tesina Cyberbullying Tweets Spinelli Albano Sistemi Intelligenti 2026.pdf` — Final academic report and project presentation.
+- `cyberbullying_classification.ipynb` — Jupyter Notebook containing the complete workflow, from EDA to feature importance analysis.
+- `cyberbullying_classification.py` — Python script containing the project implementation.
+- `report.pdf` — Final academic report and project presentation.
 
 ## 📄 Dataset
 
