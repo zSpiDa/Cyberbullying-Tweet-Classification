@@ -3,7 +3,7 @@
 **Machine Learning & NLP project developed for the Intelligent Systems course at the University of Bari (2026)**  
 *Authors: Daniele Spinelli & Simone Albano*
 
-[🇮🇹 Versione italiana](README.it.md)
+[IT Versione italiana](README.it.md)
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue?logo=python&logoColor=white)
 ![Scikit-Learn](https://img.shields.io/badge/scikit--learn-1.4+-orange?logo=scikit-learn&logoColor=white)
